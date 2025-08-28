@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EmployeeCard from "../components/EmployeeCard";
+import { serverUrl } from "../main"; // ✅ Import server URL
 
 const EmployeeDirectory = () => {
   const [employees, setEmployees] = useState([]);
@@ -9,7 +10,7 @@ const EmployeeDirectory = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/employees");
+        const response = await axios.get(`${serverUrl}/api/employees`); // ✅ Use serverUrl here
         setEmployees(response.data);
         setLoading(false);
       } catch (error) {
@@ -17,6 +18,7 @@ const EmployeeDirectory = () => {
         setLoading(false);
       }
     };
+
     fetchEmployees();
   }, []);
 
