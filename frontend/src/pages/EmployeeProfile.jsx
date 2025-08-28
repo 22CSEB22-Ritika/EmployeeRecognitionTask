@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 import Navbar from "../components/Navbar";
-import { motion } from "framer-motion";
+import { serverUrl } from "../main"; 
+
 import {
   BarChart,
   Bar,
@@ -33,16 +34,16 @@ const EmployeeProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const empRes = await axios.get(`http://localhost:8000/api/employees/${id}`);
+        const empRes = await axios.get(`${serverUrl}/api/employees/${id}`);
         setEmployee(empRes.data);
 
-        const allEmployeesRes = await axios.get(`http://localhost:8000/api/employees`);
+        const allEmployeesRes = await axios.get(`${serverUrl}/api/employees`);
         setEmployees(allEmployeesRes.data);
 
-        const givenRes = await axios.get(`http://localhost:8000/api/recognitions/given/${id}`);
+        const givenRes = await axios.get(`${serverUrl}/api/recognitions/given/${id}`);
         setGivenRecognitions(givenRes.data);
 
-        const receivedRes = await axios.get(`http://localhost:8000/api/recognitions/received/${id}`);
+        const receivedRes = await axios.get(`${serverUrl}/api/recognitions/received/${id}`);
         setReceivedRecognitions(receivedRes.data);
       } catch (err) {
         console.error("Error fetching employee data:", err);
@@ -58,7 +59,7 @@ const EmployeeProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/api/recognitions", {
+      await axios.post(`${serverUrl}/api/recognitions`, {
         to,
         from: id,
         category,
@@ -72,7 +73,7 @@ const EmployeeProfile = () => {
       setShowModal(false);
 
       // Refresh received recognitions
-      const receivedRes = await axios.get(`http://localhost:8000/api/recognitions/received/${id}`);
+      const receivedRes = await axios.get(`${serverUrl}/api/recognitions/received/${id}`);
       setReceivedRecognitions(receivedRes.data);
     } catch (err) {
       setError("Failed to send recognition. Try again!");
@@ -125,12 +126,7 @@ const EmployeeProfile = () => {
 
       <div className="max-w-5xl mx-auto mt-8 px-4 pb-12">
         {/* Profile Header */}
-        <motion.div
-          className="bg-white rounded-2xl shadow-lg p-6 flex items-center gap-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <div className="bg-white rounded-2xl shadow-lg p-6 flex items-center gap-6">
           <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-blue-400 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
             {employee.name.charAt(0).toUpperCase()}
           </div>
@@ -143,38 +139,28 @@ const EmployeeProfile = () => {
             </p>
             <p className="mt-2 text-yellow-600 text-lg">{badge}</p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Stats Cards */}
-        <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
           {[
             { label: "Recognitions Given", value: givenRecognitions.length, color: "bg-blue-100" },
             { label: "Recognitions Received", value: receivedRecognitions.length, color: "bg-green-100" },
             { label: "Categories Achieved", value: Object.keys(categoryStats).length, color: "bg-purple-100" },
             { label: "Performance Badge", value: receivedRecognitions.length >= 5 ? "⭐" : "🎯", color: "bg-yellow-100" },
           ].map((stat, idx) => (
-            <motion.div
+            <div
               key={idx}
-              className={`${stat.color} p-5 rounded-xl text-center shadow-md hover:shadow-lg hover:scale-105 transition-all`}
+              className={`${stat.color} p-5 rounded-xl text-center shadow-md hover:shadow-lg transition-all`}
             >
               <h2 className="text-xl font-bold">{stat.value}</h2>
               <p className="text-gray-600 text-sm">{stat.label}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Recognition Analytics */}
-        <motion.div
-          className="mt-10 bg-white rounded-2xl shadow-lg p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
+        <div className="mt-10 bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-bold mb-4">📊 Recognition Analytics</h2>
           {chartData.length === 0 ? (
             <p className="text-gray-500">No recognition data to display.</p>
@@ -189,27 +175,19 @@ const EmployeeProfile = () => {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </motion.div>
+        </div>
 
         {/* Recent Recognitions */}
-        <motion.div
-          className="mt-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
+        <div className="mt-10">
           <h2 className="text-2xl font-bold mb-4">🏆 Recent Recognitions</h2>
           {receivedRecognitions.length === 0 ? (
             <p className="text-gray-500">No recognitions received yet.</p>
           ) : (
             <div className="space-y-4">
               {receivedRecognitions.map((recog, index) => (
-                <motion.div
+                <div
                   key={recog._id}
                   className="p-4 bg-white rounded-lg shadow hover:shadow-lg transition"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * index }}
                 >
                   <div className="flex justify-between items-center">
                     <h3 className="font-semibold text-blue-600">
@@ -223,11 +201,11 @@ const EmployeeProfile = () => {
                   <p className="text-gray-400 text-sm mt-2">
                     {dayjs(recog.createdAt).format("DD MMM YYYY, hh:mm A")}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
 
       {/* Modal */}
