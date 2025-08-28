@@ -10,7 +10,7 @@ const app = express();
 
 // ✅ Proper CORS setup for frontend (Vite default port 5173)
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://employeerecognition.onrender.com",
   credentials: true,
 }));
 
