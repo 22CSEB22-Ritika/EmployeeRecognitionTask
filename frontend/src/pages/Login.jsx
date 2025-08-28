@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../main"; // ✅ Import server URL from main.jsx
 
 export default function Login({ className = "" }) {
   const [activeTab, setActiveTab] = useState("employee"); // Default Employee
@@ -14,8 +15,8 @@ export default function Login({ className = "" }) {
     try {
       const endpoint =
         activeTab === "employee"
-          ? "http://localhost:8000/api/employees/login"
-          : "http://localhost:8000/api/admin/login";
+          ? `${serverUrl}/api/employees/login`
+          : `${serverUrl}/api/admin/login`; // ✅ Use serverUrl dynamically
 
       const res = await axios.post(endpoint, { email, password });
 
