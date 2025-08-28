@@ -4,6 +4,9 @@ import dayjs from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar"; // ✅ Import Navbar
 
+// ✅ Set your backend base URL here
+const serverUrl = "https://your-backend.onrender.com"; // ⬅️ Change this when deploying
+
 const RecognitionFeed = () => {
   const [recognitions, setRecognitions] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -23,7 +26,7 @@ const RecognitionFeed = () => {
   // ✅ Fetch recognitions
   const fetchRecognitions = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/recognitions");
+      const res = await axios.get(`${serverUrl}/api/recognitions`);
       setRecognitions(res.data);
     } catch (error) {
       console.error("Error fetching recognitions:", error);
@@ -35,7 +38,7 @@ const RecognitionFeed = () => {
   // ✅ Fetch employees for dropdowns
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/employees");
+      const res = await axios.get(`${serverUrl}/api/employees`);
       setEmployees(res.data);
     } catch (err) {
       console.error("Error fetching employees:", err);
@@ -59,7 +62,7 @@ const RecognitionFeed = () => {
     }
 
     try {
-      await axios.post("http://localhost:8000/api/recognitions", {
+      await axios.post(`${serverUrl}/api/recognitions`, {
         from: loggedInUser?._id,
         to,
         category,
