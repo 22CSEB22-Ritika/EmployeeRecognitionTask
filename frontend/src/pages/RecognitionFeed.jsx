@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar"; // ✅ Import Navbar
-
-// ✅ Set your backend base URL here
-const serverUrl = "https://your-backend.onrender.com"; // ⬅️ Change this when deploying
+import Navbar from "../components/Navbar"; 
+import { serverUrl } from "../main";
 
 const RecognitionFeed = () => {
   const [recognitions, setRecognitions] = useState([]);
